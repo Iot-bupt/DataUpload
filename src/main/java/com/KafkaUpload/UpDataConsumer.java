@@ -15,19 +15,27 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 从Kafka中拉取数据。并分发数据处理
  */
 
-
 public class UpDataConsumer implements Runnable {
 
     // config
     private String host ;
     private int port ;
     private final AtomicBoolean closed = new AtomicBoolean(false);
+    private ThingBoardProxy tp = null ;
     KafkaConsumer<String, String> consumer ;
-    private UpDataConsumerImpl imp = new UpDataConsumerImpl() ;
+    private UpDataConsumerImpl impl ;
+
 
     public UpDataConsumer(String host, int port) {
         this.host = host ;
         this.port = port ;
+    }
+
+    public UpDataConsumer(String host, int port, ThingBoardProxy tp) {
+        this.host = host ;
+        this.port = port ;
+        this.tp = tp ;
+        this.impl = new UpDataConsumerImpl(host, port, tp) ;
     }
 
     public void run() {
@@ -51,7 +59,7 @@ public class UpDataConsumer implements Runnable {
                     String msg = rc.value() ;
                     System.out.println("msg=" + rc.value());
 
-                    UpDataConsumerImpl impl = new UpDataConsumerImpl() ;
+                    UpDataConsumerImpl impl = new UpDataConsumerImpl(host, port, tp) ;
                     impl.process(msg);
                 }
                 try {

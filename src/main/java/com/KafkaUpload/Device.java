@@ -8,6 +8,13 @@ package com.KafkaUpload;
 public class Device {
 
     private String uId ;
-    private String deviceToken ;
+    private String deviceAccess ;
+    private String deviceId ;
+
+    public Device(String uId, String deviceAccess, String deviceId) {
+        this.uId = uId ;
+        this.deviceAccess = deviceAccess ;
+        this.deviceId = deviceId ;
+    }
 
 }

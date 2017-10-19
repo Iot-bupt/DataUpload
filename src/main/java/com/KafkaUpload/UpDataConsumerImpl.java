@@ -6,6 +6,8 @@ import com.KafkaUpload.upload.handler.upLoadTelemetryHandler;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import java.util.HashMap;
+
 /**
  * Created by tangjialiang on 2017/10/19.
  *
@@ -13,19 +15,35 @@ import com.alibaba.fastjson.JSONObject;
  *
  */
 public class UpDataConsumerImpl {
+
+    // ===== temp mapper =======
+    private HashMap<String, Device> deviceMapper = new HashMap<String, Device>() ;
+    // =========================
+
+    private String host ;
+    private int port ;
+    ThingBoardProxy tp ;
+
+    public UpDataConsumerImpl(String host, int port, ThingBoardProxy tp) {
+        this.host = host ;
+        this.port = port ;
+        this.tp = tp ;
+    }
+
+
     public void process (String msg) {
         JSONObject pareseedMsg = JSON.parseObject(msg) ;
 
         try {
-            String deviceId = (String)pareseedMsg.get("deviceId") ;
-            String type = (String)pareseedMsg.get("infoType") ;
-            String info = (String)pareseedMsg.get("msg") ;
+            String uId = (String)pareseedMsg.get("uId") ;
+            String dataType = (String)pareseedMsg.get("dataType") ;
+            String info = (String)pareseedMsg.get("info") ;
 
             // 分发数据并处理
-            if (type.equals("attributions")) {
-                getAttributeHandler(deviceId, type, info).process() ;
-            } else if (type.equals("telemetry")) {
-                getTelemetryHandler(deviceId, type, info).process() ;
+            if (dataType.equals("attributions")) {
+                getAttributeHandler(uId, dataType, info).process() ;
+            } else if (dataType.equals("telemetry")) {
+                getTelemetryHandler(uId, dataType, info).process() ;
             }
 
         } catch (Exception e) {
@@ -35,11 +53,11 @@ public class UpDataConsumerImpl {
     }
 
     private upLoadDataHandler getAttributeHandler(String deviceId, String type, String info) {
-        return new upLoadAttributionsHandler(deviceId, type, info);
+        return new upLoadAttributionsHandler(tp, deviceId, type, info, deviceMapper);
     }
 
     private upLoadDataHandler getTelemetryHandler(String deviceId, String type, String info) {
-        return new upLoadTelemetryHandler(deviceId, type, info);
+        return new upLoadTelemetryHandler(tp, deviceId, type, info, deviceMapper);
     }
 
     // --------------- test ---------------
