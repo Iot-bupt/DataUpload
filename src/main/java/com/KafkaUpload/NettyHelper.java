@@ -7,18 +7,16 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.*;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 
 /**
  * Created by tangjialiang on 2017/10/18.
  *
  * 使用该类，向thingsboard发送http请求
  */
-public class NettyHelper {
+public class NettyHelper extends ThingsBoardHelper {
     // 应该与thingsboard建立长链接
-
-    // configuration
-    private String host ;
-    private int port ;
 
     // 与thingsboard的长链接
     Bootstrap b = null ;
@@ -29,12 +27,12 @@ public class NettyHelper {
     ChannelInboundHandlerAdapter proxy = null ;
 
     public NettyHelper(String host, int port, ThingBoardProxy proxy) {
-        this.host = host ;
-        this.port = port ;
+        super(host, port);
         this.proxy = proxy ;
     }
 
-    public void connect() throws Exception{
+    @Override
+    public void connect() {
         workerGroup = new NioEventLoopGroup();
 
         try {
@@ -54,7 +52,9 @@ public class NettyHelper {
             });
 
             // Start the client.
-            conn = b.connect(host, port).sync() ;
+            conn = b.connect(getHost(), getPort()).sync() ;
+
+            // end test
         } catch (Exception e) {
             System.out.println(e) ;
         }
@@ -64,6 +64,7 @@ public class NettyHelper {
 
     public void sendHttp(DefaultFullHttpRequest request) throws Exception {
         // 发送http请求
+
         try {
             conn.channel().write(request);
             conn.channel().flush();

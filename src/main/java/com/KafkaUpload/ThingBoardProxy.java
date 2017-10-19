@@ -17,7 +17,7 @@ public class ThingBoardProxy extends ChannelInboundHandlerAdapter {
     private String host ;
     private int port ;
 
-    private NettyHelper netty = null ;
+    private ThingsBoardHelper thingsboard = null ;
 
     /**
      *  todo
@@ -31,8 +31,8 @@ public class ThingBoardProxy extends ChannelInboundHandlerAdapter {
         this.host = host ;
         this.port = port ;
 
-        this.netty = new NettyHelper(host, port, this) ;
-        this.netty.connect();
+        this.thingsboard = new NettyHelper(host, port, this) ;
+        this.thingsboard.connect();
 
         getToken() ;
     }
@@ -69,7 +69,7 @@ public class ThingBoardProxy extends ChannelInboundHandlerAdapter {
         ThingsBoardApi api = new ThingsBoardApi(this.host, this.port) ;
         DefaultFullHttpRequest request = api.api_token("tenant@openiot.org", "tenant");
 
-        netty.sendHttp(request);
+        ((NettyHelper)thingsboard).sendHttp(request);
     }
 
     // ---> 创建一个设备
@@ -79,7 +79,7 @@ public class ThingBoardProxy extends ChannelInboundHandlerAdapter {
         ThingsBoardApi api = new ThingsBoardApi(this.host, this.port) ;
         DefaultFullHttpRequest defaultFullHttpRequest = api.api_device(msg);
 
-        netty.sendHttp(defaultFullHttpRequest);
+        ((NettyHelper)thingsboard).sendHttp(defaultFullHttpRequest);
     }
 
 
