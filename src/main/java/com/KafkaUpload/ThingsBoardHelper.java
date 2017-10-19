@@ -38,4 +38,12 @@ public class ThingsBoardHelper {
     public void sendHttp(String msg) {
 
     }
+
+    public void sendPost(String msg) {
+
+    }
+
+    public void sendGet(String msg) {
+
+    }
 }

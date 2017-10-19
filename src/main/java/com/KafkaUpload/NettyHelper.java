@@ -26,10 +26,14 @@ public class NettyHelper extends ThingsBoardHelper {
     // thingsboard的代理类
     ChannelInboundHandlerAdapter proxy = null ;
 
-    public NettyHelper(String host, int port, ThingBoardProxy proxy) {
-        super(host, port);
-        this.proxy = proxy ;
+    public NettyHelper(String host, int port) {
+        super(host, port) ;
     }
+
+//    public NettyHelper(String host, int port, ThingBoardProxy proxy) {
+//        super(host, port);
+//        this.proxy = proxy ;
+//    }
 
     @Override
     public void connect() {

@@ -1,9 +1,12 @@
 package com.KafkaUpload;
 
+import com.alibaba.fastjson.JSONObject;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.*;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by tangjialiang on 2017/10/18.
@@ -14,6 +17,7 @@ public class ThingsBoardApi {
 
     private String host = "127.0.0.1" ;
     private int port = 123 ;
+    private HttpClientHelper thingsboardHelper = new HttpClientHelper() ;
 
     public ThingsBoardApi(String host, int port) {
         this.host = host ;
@@ -32,9 +36,8 @@ public class ThingsBoardApi {
      * @return
      * @throws Exception
      */
-    public DefaultFullHttpRequest postDeviceAttributes(String deviceToken, String attributes, String msg) throws Exception{
+    public void postDeviceAttributes(String deviceToken, String attributes, String msg) throws Exception{
         // todo
-        return null ;
     }
 
     /**
@@ -45,41 +48,58 @@ public class ThingsBoardApi {
      * @return
      * @throws Exception
      */
-    public DefaultFullHttpRequest api_telemetry(String deviceToken, String msg) throws Exception {
-        // todo
-        String address = "http://" + host + "/api/auth/login" ;
-        URI uri = new URI(address);
-        DefaultFullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST,
-                uri.toASCIIString(), Unpooled.wrappedBuffer(msg.getBytes("UTF-8")));
+    public void api_telemetry(String token, String deviceToken, String msg) throws Exception {
+        String address = "http://" + host + ":"+port+"/api/v1/"+deviceToken+"/telemetry" ;
 
-        // 构建http请求
-        request.headers().set(HttpHeaders.Names.HOST, host);
-        request.headers().set(HttpHeaders.Names.CONTENT_TYPE, HttpHeaders.Values.APPLICATION_JSON) ;
-        request.headers().set(HttpHeaders.Names.ACCEPT, HttpHeaders.Values.APPLICATION_JSON) ;
-        return null ;
+        Map<String, String> request_headers = new HashMap<String, String>() ;
+        request_headers.put("Content_Type", "application/json") ;
+        request_headers.put("Accept", "application/json") ;
+        request_headers.put("X-Authorization", "Bearer "+token) ;
+
+        // 消息体（为post请求）
+        JSONObject msgjson = JSONObject.parseObject(msg) ;
+
+        // 发送这个请求
+        String response = thingsboardHelper.sendPost(address, request_headers, msgjson, false);
+
+        // 解析返回json
+        // nothing
+
+        return  ;
     }
 
     /**
-     * POST /api/device
-     * 获取
-     * @param msg
+     *
+     * @param token
+     * @param deviceName
      * @return
-     * @throws Exception
+     * @throws Exception 存在相同名字出现400
      */
-    public DefaultFullHttpRequest api_device(String msg) throws Exception{
-        String address = "http://" + host + ":8080/api/device" ;
-        URI uri = new URI(address);
-
-        DefaultFullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST,
-                uri.toASCIIString(), Unpooled.wrappedBuffer(msg.getBytes("UTF-8")));
+    public String api_device(String token, String deviceName, String deviceType) throws Exception{
+        // 构建访问地址
+        String address = "http://" + host + ":"+port+"/api/device" ;
 
         // 构建http请求
-        request.headers().set(HttpHeaders.Names.HOST, host);
-        request.headers().set(HttpHeaders.Names.CONTENT_TYPE, HttpHeaders.Values.APPLICATION_JSON) ;
-        request.headers().set(HttpHeaders.Names.ACCEPT, HttpHeaders.Values.APPLICATION_JSON) ;
-        request.headers().set("X-Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZW5hbnRAb3BlbmlvdC5vcmciLCJzY29wZXMiOlsiVEVOQU5UX0FETUlOIl0sInVzZXJJZCI6ImNjM2NlMTAwLTlmY2UtMTFlNi04MDgwLTgwODA4MDgwODA4MCIsImVuYWJsZWQiOnRydWUsInRlbmFudElkIjoiY2JhNDRhODAtOWZjZS0xMWU2LTgwODAtODA4MDgwODA4MDgwIiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCIsImlzcyI6ImJ1cHQub3BlbmlvdCIsImlhdCI6MTUwODMxMTEzOCwiZXhwIjoxNTA4MzEyMDM4fQ.jfoKM-WrQ-vWpFtpMUc4nrP5OHz5bJXD1lMd_CSUpuzbitaVWtdkmFQ30xThDapayhnLMd5mSt6i-D0bCHl5XA") ; // 上行数据不带
+        Map<String, String> request_headers = new HashMap<String, String>() ;
+        request_headers.put("Content-Type", "application/json") ;
+        request_headers.put("Accept", "application/json") ;
+        request_headers.put("X-Authorization", "Bearer "+token) ;
 
-        return request ;
+        // 消息体（为post请求）
+        JSONObject msgjson = new JSONObject();
+        msgjson.put("name", deviceName);
+        msgjson.put("type", deviceType) ;
+
+        // 发送这个请求
+        String response = thingsboardHelper.sendPost(address, request_headers, msgjson, true);
+
+        // 解析返回json
+        JSONObject jsonObject = JSONObject.parseObject(response);
+        JSONObject id = (JSONObject)jsonObject.get("id");
+        String deviceId = (String)id.get("id") ;
+
+        System.out.println("get deviceId: " + deviceId) ;
+        return deviceId ;
     }
 
     /**
@@ -90,32 +110,56 @@ public class ThingsBoardApi {
      * @return
      * @throws Exception
      */
-    public DefaultFullHttpRequest api_token(String username, String password) throws Exception {
-        String msg = "{\"username\":\""+username+"\", \"password\":\""+password+"\"}" ;
-
-        String address = "http://" + host + ":8080/api/auth/login" ;
-        URI uri = new URI(address);
-
-        DefaultFullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST,
-                uri.toASCIIString(), Unpooled.wrappedBuffer(msg.getBytes("UTF-8")));
+    public String api_token(String username, String password) throws Exception {
+        // 构建访问地址
+        String address = "http://" + host + ":"+port+"/api/auth/login" ;
 
         // 构建http请求
-        request.headers().set(HttpHeaders.Names.HOST, host);
-        request.headers().set(HttpHeaders.Names.CONTENT_TYPE, HttpHeaders.Values.APPLICATION_JSON) ;
-        request.headers().set(HttpHeaders.Names.ACCEPT, HttpHeaders.Values.APPLICATION_JSON) ;
+        Map<String, String> request_headers = new HashMap<String, String>() ;
+        request_headers.put("Content-Type", "application/json") ;
+        request_headers.put("Accept", "application/json") ;
 
-        return request ;
+        // 消息体（为post请求）
+        JSONObject msgjson = new JSONObject();
+        msgjson.put("username", "tenant@thingsboard.org");
+        msgjson.put("password", "tenant");
+
+        // 发送这个请求
+        String response = thingsboardHelper.sendPost(address, request_headers, msgjson, true);
+
+        // 解析返回json
+        JSONObject jsonObject = JSONObject.parseObject(response);
+        String token = (String)jsonObject.get("token") ;
+        return token ;
     }
 
     /**
-     * GET /api/device/{deviceId}/credentials
-     * 获取设备的access-token
+     * GET /api/device/{deviceId}/credentials"
+     * 获取设备的deviceId
+     * @param token
      * @param deviceId
-     * @param msg
      * @return
      */
-    public DefaultFullHttpRequest api_accessToken(String deviceId, String msg) {
-        // todo
-        return null ;
+    public String api_accessToken(String token, String deviceId) {
+        // 构建访问地址
+        String address = "http://" + host + ":"+port+"/api/device/"+deviceId+"/credentials" ;
+
+        // 构建http请求
+        Map<String, String> request_headers = new HashMap<String, String>() ;
+        request_headers.put("Content-Type", "application/json") ;
+        request_headers.put("Accept", "application/json") ;
+        request_headers.put("X-Authorization", "Bearer "+token) ;
+
+        // 消息体（为post请求）
+        // nothing
+
+        // 发送这个请求
+        String response = thingsboardHelper.sendGet(address, request_headers);
+
+        // 解析返回json
+        JSONObject jsonObjec  = JSONObject.parseObject(response);
+        String access_token = (String)jsonObjec.get("credentialsId") ;
+
+        return access_token ;
     }
 }
