@@ -18,7 +18,7 @@ public class upLoadAttributionsHandler extends upLoadDataHandler {
 
     @Override
     public void process() {
-        // 进行数据合法性对齐 from redis
+        // 进行数据合法性对齐 from redis ==> get accessToken
 
         // 向thingsboard发送数据 telemetry
     }

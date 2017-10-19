@@ -12,8 +12,12 @@ public class upLoadDataHandler {
      * @return deviecId
      */
     public String toBeValidate() {
+
         // 向thingsbaoard查询该deviceId是否存在。
-        // 否： 在thingsboard中创建该device，并返回
+        // 否： 在thingsboard中创建该device，再返回该设备的access-token
+        // 是： 返回该设备的access-token
+
+
 
         return "" ; //deviceId
     }
