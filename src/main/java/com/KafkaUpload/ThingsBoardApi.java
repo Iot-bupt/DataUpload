@@ -30,14 +30,25 @@ public class ThingsBoardApi {
     /**
      * POST /api/v1/{deviceToken}/attributes
      * 发送设备的属性数据
+     * @param token
      * @param deviceToken
-     * @param attributes
      * @param msg
      * @return
      * @throws Exception
      */
-    public void postDeviceAttributes(String deviceToken, String attributes, String msg) throws Exception{
-        // todo
+    public void api_attributes(String token, String deviceToken, String msg) throws Exception{
+        String address = "http://" + host + ":"+port+"/api/v1/"+deviceToken+"/attributes" ;
+
+        Map<String, String> request_headers = new HashMap<String, String>() ;
+        request_headers.put("Content_Type", "application/json") ;
+        request_headers.put("Accept", "application/json") ;
+        request_headers.put("X-Authorization", "Bearer "+token) ;
+
+        // 消息体（为post请求）
+        JSONObject msgjson = JSONObject.parseObject(msg) ;
+
+        // 发送这个请求
+        String response = thingsboardHelper.sendPost(address, request_headers, msgjson, false);
     }
 
     /**

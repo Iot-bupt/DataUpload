@@ -9,17 +9,22 @@ import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpResponse;
 
+import java.util.HashMap;
+
 /**
  * Created by tangjialiang on 2017/10/18.
  *
  * thingsboard 的操作代理
  */
 public class ThingBoardProxy {
+
     private String host ;
     private int port ;
     private ThingsBoardApi api ;
     private String username  ;
     private String password  ;
+
+    private HashMap<String, Device> deviceMap = new HashMap<String, Device>() ;
 
     /**
      *  todo
@@ -55,7 +60,6 @@ public class ThingBoardProxy {
     // ---> 创建一个设备
     public void createDevice(String deviceName, String deviceType) throws Exception{
         // "{\"name\":\"test_name_tjl\", \"type\":\"default\"}" ;
-
         ThingsBoardApi api = new ThingsBoardApi(this.host, this.port) ;
         String deviceId = api.api_device(token, deviceName, deviceType);
 
@@ -63,8 +67,8 @@ public class ThingBoardProxy {
 
     // --> 发送设备的attributions
     public void sendAttributions(String deviceToken, String msg) throws Exception{
-
-
+        ThingsBoardApi api = new ThingsBoardApi(this.host, this.port) ;
+        api.api_attributes(token, deviceToken, msg);
     }
 
     // --> 发送设备的telemetry
@@ -101,7 +105,7 @@ public class ThingBoardProxy {
             // telemetry
             String msg = "{\"temperature\":\"31\"}" ;
             String deviecToken = "3HLZRun4LjT8PLSOGhvf" ;
-            tp.sendTelelmetry(deviecToken, msg);
+            tp.sendAttributions(deviecToken, msg);
 
         } catch (Exception e) {
             System.out.println(e) ;
