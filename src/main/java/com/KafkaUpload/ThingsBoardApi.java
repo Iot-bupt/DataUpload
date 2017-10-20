@@ -1,10 +1,6 @@
 package com.KafkaUpload;
 
 import com.alibaba.fastjson.JSONObject;
-import io.netty.buffer.Unpooled;
-import io.netty.handler.codec.http.*;
-
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +36,7 @@ public class ThingsBoardApi {
         String address = "http://" + host + ":"+port+"/api/v1/"+deviceToken+"/attributes" ;
 
         Map<String, String> request_headers = new HashMap<String, String>() ;
-        request_headers.put("Content_Type", "application/json") ;
+        request_headers.put("Content-Type", "application/json") ;
         request_headers.put("Accept", "application/json") ;
         request_headers.put("X-Authorization", "Bearer "+token) ;
 
@@ -48,7 +44,7 @@ public class ThingsBoardApi {
         JSONObject msgjson = JSONObject.parseObject(msg) ;
 
         // 发送这个请求
-        String response = thingsboardHelper.sendPost(address, request_headers, msgjson, false);
+        String response = thingsboardHelper.sendPost(address, request_headers, msgjson);
     }
 
     /**
@@ -63,7 +59,7 @@ public class ThingsBoardApi {
         String address = "http://" + host + ":"+port+"/api/v1/"+deviceToken+"/telemetry" ;
 
         Map<String, String> request_headers = new HashMap<String, String>() ;
-        request_headers.put("Content_Type", "application/json") ;
+        request_headers.put("Content-Type", "application/json") ;
         request_headers.put("Accept", "application/json") ;
         request_headers.put("X-Authorization", "Bearer "+token) ;
 
@@ -71,7 +67,7 @@ public class ThingsBoardApi {
         JSONObject msgjson = JSONObject.parseObject(msg) ;
 
         // 发送这个请求
-        String response = thingsboardHelper.sendPost(address, request_headers, msgjson, false);
+        String response = thingsboardHelper.sendPost(address, request_headers, msgjson);
 
         // 解析返回json
         // nothing
@@ -80,7 +76,8 @@ public class ThingsBoardApi {
     }
 
     /**
-     *
+     * POST /api/device
+     * 创建一个设备
      * @param token
      * @param deviceName
      * @return
@@ -102,7 +99,7 @@ public class ThingsBoardApi {
         msgjson.put("type", deviceType) ;
 
         // 发送这个请求
-        String response = thingsboardHelper.sendPost(address, request_headers, msgjson, true);
+        String response = thingsboardHelper.sendPost(address, request_headers, msgjson);
 
         // 解析返回json
         JSONObject jsonObject = JSONObject.parseObject(response);
@@ -136,7 +133,7 @@ public class ThingsBoardApi {
         msgjson.put("password", "tenant");
 
         // 发送这个请求
-        String response = thingsboardHelper.sendPost(address, request_headers, msgjson, true);
+        String response = thingsboardHelper.sendPost(address, request_headers, msgjson);
 
         // 解析返回json
         JSONObject jsonObject = JSONObject.parseObject(response);
@@ -146,7 +143,7 @@ public class ThingsBoardApi {
 
     /**
      * GET /api/device/{deviceId}/credentials"
-     * 获取设备的deviceId
+     * 获取设备的accessToken
      * @param token
      * @param deviceId
      * @return

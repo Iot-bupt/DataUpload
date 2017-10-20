@@ -1,14 +1,5 @@
 package com.KafkaUpload;
 
-import com.alibaba.fastjson.JSONObject;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.codec.http.DefaultFullHttpRequest;
-import io.netty.handler.codec.http.HttpContent;
-import io.netty.handler.codec.http.HttpHeaders;
-import io.netty.handler.codec.http.HttpResponse;
-
 import java.util.HashMap;
 
 /**
@@ -67,14 +58,21 @@ public class ThingBoardProxy {
 
     // --> 发送设备的attributions
     public void sendAttributions(String deviceToken, String msg) throws Exception{
-        ThingsBoardApi api = new ThingsBoardApi(this.host, this.port) ;
-        api.api_attributes(token, deviceToken, msg);
+        //ThingsBoardApi api = new ThingsBoardApi(this.host, this.port) ;
+        //api.api_attributes(token, deviceToken, msg);
+
+        // doc: 向thingsboard中拥有accessToken的设备发送attribute数据
+        // 1、传入的是kafka中的uId，在缓存中查找是否有这个uId对应的设备
+        // 2、有   得到accessToken,并发送attribute
+        // 2、否   (1)依据设备名创建一个设备（返回deviceId）(2)查找设备的accessToken(在缓存中记录) （3）发送attributes
+
+
     }
 
     // --> 发送设备的telemetry
     public void sendTelelmetry(String deviceToken, String msg) throws Exception{
-        ThingsBoardApi api = new ThingsBoardApi(this.host, this.port) ;
-        api.api_telemetry(token, deviceToken, msg);
+        //ThingsBoardApi api = new ThingsBoardApi(this.host, this.port) ;
+        //api.api_telemetry(token, deviceToken, msg);
     }
 
     public String get_accessToken(String deviceId) {
@@ -94,7 +92,7 @@ public class ThingBoardProxy {
             String host = "10.108.218.58";
             int port = 8080;
 //            String host = "localhost" ;
-//            int port = 1567 ;
+//            int port = 1234 ;
             String username = "tenant@thingsboard.org" ;
             String password = "tenant" ;
 
@@ -103,9 +101,9 @@ public class ThingBoardProxy {
 //            tp.createDevice("hello world", "default");
 
             // telemetry
-            String msg = "{\"temperature\":\"31\"}" ;
+            String msg = "{\"hallo\":\"tenant@thingsboard.org\", \"hello\":\"tenant\"}" ;
             String deviecToken = "3HLZRun4LjT8PLSOGhvf" ;
-            tp.sendAttributions(deviecToken, msg);
+            tp.sendTelelmetry(deviecToken, msg);
 
         } catch (Exception e) {
             System.out.println(e) ;

@@ -7,7 +7,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -67,7 +66,7 @@ public class HttpClientHelper {
      * @param msg
      * @return
      */
-    public static String sendPost(String address, Map<String, String> request_headers, JSONObject msg, Boolean doinput) {
+    public static String sendPost(String address, Map<String, String> request_headers, JSONObject msg) {
         String response = null ;
 
         try {
@@ -77,7 +76,7 @@ public class HttpClientHelper {
                     .openConnection();
 
             connection.setDoOutput(true);
-            connection.setDoInput(doinput);
+            connection.setDoInput(true);
             connection.setRequestMethod("POST");
             connection.setUseCaches(false);
             connection.setInstanceFollowRedirects(true);
@@ -96,18 +95,17 @@ public class HttpClientHelper {
             out.close();
 
             //读取响应
-            if (doinput) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(
-                        connection.getInputStream()));
-                String lines;
-                StringBuffer sb = new StringBuffer("");
-                while ((lines = reader.readLine()) != null) {
-                    lines = new String(lines.getBytes(), "utf-8");
-                    sb.append(lines);
-                }
-                response = sb.toString();
-                reader.close();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    connection.getInputStream()));
+            String lines;
+            StringBuffer sb = new StringBuffer("");
+            while ((lines = reader.readLine()) != null) {
+                lines = new String(lines.getBytes(), "utf-8");
+                sb.append(lines);
             }
+            response = sb.toString();
+            reader.close();
+
             // 断开连接
             connection.disconnect();
         } catch (MalformedURLException e) {
