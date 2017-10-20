@@ -20,6 +20,7 @@ public class Applicaion {
             ThingBoardProxy tp = new ThingBoardProxy(host, port);
 
             UpDataConsumer cusmer = new UpDataConsumer(host, port, tp);
+
             Thread thread = new Thread(cusmer);
             thread.start();
         } catch (Exception e) {
