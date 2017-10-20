@@ -1,5 +1,7 @@
 package com.KafkaUpload;
 
+import com.KafkaUpload.utils.DeviceCacheMapper;
+
 import java.util.HashMap;
 
 /**
@@ -11,11 +13,12 @@ public class ThingBoardProxy {
 
     private String host ;
     private int port ;
-    private ThingsBoardApi api ;
     private String username  ;
     private String password  ;
 
-    private HashMap<String, Device> deviceMap = new HashMap<String, Device>() ;
+    private ThingsBoardApi api ;
+    private DeviceCacheMapper cacheMapper ;
+
 
     /**
      *  todo
@@ -29,6 +32,7 @@ public class ThingBoardProxy {
         this.host = host ;
         this.port = port ;
         this.api = new ThingsBoardApi(this.host, this.port) ;
+        // todo new DeviceCacheMapper
     }
 
     public ThingBoardProxy(String host, int port, String username, String password) throws Exception {
@@ -37,7 +41,8 @@ public class ThingBoardProxy {
         this.api = new ThingsBoardApi(this.host, this.port) ;
         this.username = username ;
         this.password = password ;
-//        getToken(username, password);
+        getToken(username, password);
+        // todo new DeviceCacheMapper
     }
 
     // ----------------------- 相关业务 -----------------------
@@ -57,7 +62,7 @@ public class ThingBoardProxy {
     }
 
     // --> 发送设备的attributions
-    public void sendAttributions(String deviceToken, String msg) throws Exception{
+    public void sendAttributions(Device device, String msg) throws Exception{
         //ThingsBoardApi api = new ThingsBoardApi(this.host, this.port) ;
         //api.api_attributes(token, deviceToken, msg);
 
@@ -66,13 +71,51 @@ public class ThingBoardProxy {
         // 2、有   得到accessToken,并发送attribute
         // 2、否   (1)依据设备名创建一个设备（返回deviceId）(2)查找设备的accessToken(在缓存中记录) （3）发送attributes
 
+        String uid = device.getDeviceId() ;
+        String deviceName = device.getDeviceName() ;
+
+        Device cacheDevice = cacheMapper.getDeviceByuId(uid);
+        if (cacheDevice == null) { // 没有命中
+            // 创建设备
+            String deviceId = this.api.api_device(token, deviceName, "default");
+            String accessToken = this.api.api_accessToken(token, deviceId);
+
+            // 更新缓存
+            device = new Device(uid, accessToken, deviceId, deviceName) ;
+            cacheMapper.addDevice(uid, device) ;
+        }
+
+        // 发送attributes数据
+        this.api.api_attributes(token, device.getDeviceAccess(), msg);
 
     }
 
     // --> 发送设备的telemetry
-    public void sendTelelmetry(String deviceToken, String msg) throws Exception{
+    public void sendTelelmetry(Device device, String msg) throws Exception{
         //ThingsBoardApi api = new ThingsBoardApi(this.host, this.port) ;
         //api.api_telemetry(token, deviceToken, msg);
+
+        // doc: 向thingsboard中拥有accessToken的设备发送attribute数据
+        // 1、传入的是kafka中的uId，在缓存中查找是否有这个uId对应的设备
+        // 2、有   得到accessToken,并发送attribute
+        // 2、否   (1)依据设备名创建一个设备（返回deviceId）(2)查找设备的accessToken(在缓存中记录) （3）发送attributes
+
+        String uid = device.getDeviceId() ;
+        String deviceName = device.getDeviceName() ;
+
+        Device cacheDevice = cacheMapper.getDeviceByuId(uid);
+        if (cacheDevice == null) { // 没有命中
+            // 创建设备
+            String deviceId = this.api.api_device(token, deviceName, "default");
+            String accessToken = this.api.api_accessToken(token, deviceId);
+
+            // 更新缓存
+            device = new Device(uid, accessToken, deviceId, deviceName) ;
+            cacheMapper.addDevice(uid, device) ;
+        }
+
+        // 发送attributes数据
+        this.api.api_telemetry(token, device.getDeviceAccess(), msg);
     }
 
     public String get_accessToken(String deviceId) {
@@ -97,13 +140,15 @@ public class ThingBoardProxy {
             String password = "tenant" ;
 
             ThingBoardProxy tp = new ThingBoardProxy(host, port, username, password);
-//            tp.get_accessToken("2bebd5d0-b4d1-11e7-b5a9-39a0b348caf5");
-//            tp.createDevice("hello world", "default");
+            tp.get_accessToken("2bebd5d0-b4d1-11e7-b5a9-39a0b348caf5");
+            tp.createDevice("hello world", "default");
 
             // telemetry
             String msg = "{\"hallo\":\"tenant@thingsboard.org\", \"hello\":\"tenant\"}" ;
             String deviecToken = "3HLZRun4LjT8PLSOGhvf" ;
-            tp.sendTelelmetry(deviecToken, msg);
+            Device device = new Device("uid123123", "myDevice") ;
+
+            tp.sendTelelmetry(device, msg);
 
         } catch (Exception e) {
             System.out.println(e) ;
