@@ -16,10 +16,6 @@ import java.util.HashMap;
  */
 public class UpDataConsumerImpl {
 
-    // ===== temp mapper =======
-    private HashMap<String, Device> deviceMapper = new HashMap<String, Device>() ;
-    // =========================
-
     private String host ;
     private int port ;
     ThingBoardProxy tp ;

@@ -11,11 +11,14 @@ import java.util.HashMap;
  * 对从Kafka拉取到的数据处理  -- type : attributions
  */
 public class upLoadAttributionsHandler extends upLoadDataHandler {
+
+    private ThingBoardProxy tp ;
+    // 以下是由Kafka消费者解析到的字段
     private String uId ;
     private String dataType ;
     private String info ;
     private String deviceName ;
-    private ThingBoardProxy tp ;
+
 
     public upLoadAttributionsHandler(ThingBoardProxy tp, String uId, String dataType, String info, String deviceName) {
         this.tp = tp ;
