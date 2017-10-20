@@ -6,8 +6,6 @@ import com.KafkaUpload.upload.handler.upLoadTelemetryHandler;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
-import java.util.HashMap;
-
 /**
  * Created by tangjialiang on 2017/10/19.
  *
