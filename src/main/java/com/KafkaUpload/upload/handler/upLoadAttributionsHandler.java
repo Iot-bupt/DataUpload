@@ -14,24 +14,27 @@ public class upLoadAttributionsHandler extends upLoadDataHandler {
     private String uId ;
     private String dataType ;
     private String info ;
+    private String deviceName ;
     private ThingBoardProxy tp ;
 
-    public upLoadAttributionsHandler(ThingBoardProxy tp, String uId, String dataType, String info, HashMap<String, Device> deviceMapper) {
-        super(deviceMapper);
-
+    public upLoadAttributionsHandler(ThingBoardProxy tp, String uId, String dataType, String info, String deviceName) {
         this.tp = tp ;
         this.uId = uId ;
         this.dataType = dataType ;
         this.info = info ;
+        this.deviceName = deviceName ;
     }
 
     @Override
     public void process() {
-        // 进行数据合法性对齐 from redis ==> get accessToken
-        
+        // 向thingsboard发送数据 attributions
+        Device device = new Device(uId, deviceName) ;
 
-        // 向thingsboard发送数据 telemetry
-
-
+        try {
+            tp.sendAttributions(device, info);
+        } catch (Exception e) {
+            System.out.println(e) ;
+            e.printStackTrace() ;
+        }
     }
 }

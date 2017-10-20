@@ -38,12 +38,13 @@ public class UpDataConsumerImpl {
             String uId = (String)pareseedMsg.get("uId") ;
             String dataType = (String)pareseedMsg.get("dataType") ;
             String info = (String)pareseedMsg.get("info") ;
+            String deviceName = (String)pareseedMsg.get("deviceName") ;
 
             // 分发数据并处理
             if (dataType.equals("attributions")) {
-                getAttributeHandler(uId, dataType, info).process() ;
+                getAttributeHandler(uId, dataType, info, deviceName).process() ;
             } else if (dataType.equals("telemetry")) {
-                getTelemetryHandler(uId, dataType, info).process() ;
+                getTelemetryHandler(uId, dataType, info, deviceName).process() ;
             }
 
         } catch (Exception e) {
@@ -52,12 +53,12 @@ public class UpDataConsumerImpl {
         }
     }
 
-    private upLoadDataHandler getAttributeHandler(String deviceId, String type, String info) {
-        return new upLoadAttributionsHandler(tp, deviceId, type, info, deviceMapper);
+    private upLoadDataHandler getAttributeHandler(String deviceId, String type, String info, String deviceName) {
+        return new upLoadAttributionsHandler(tp, deviceId, type, info, deviceName);
     }
 
-    private upLoadDataHandler getTelemetryHandler(String deviceId, String type, String info) {
-        return new upLoadTelemetryHandler(tp, deviceId, type, info, deviceMapper);
+    private upLoadDataHandler getTelemetryHandler(String deviceId, String type, String info, String deviceName) {
+        return new upLoadTelemetryHandler(tp, deviceId, type, info, deviceName);
     }
 
     // --------------- test ---------------
