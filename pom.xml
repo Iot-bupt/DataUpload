@@ -69,12 +69,12 @@
     </dependency>
 
 
+    <!-- https://mvnrepository.com/artifact/com.alibaba.rocketmq/rocketmq-client -->
     <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-all</artifactId>
-      <version>5.14.1</version>
+      <groupId>com.alibaba.rocketmq</groupId>
+      <artifactId>rocketmq-client</artifactId>
+      <version>3.2.6</version>
     </dependency>
-
 
   </dependencies>
 </project>

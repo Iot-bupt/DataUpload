@@ -47,8 +47,7 @@ public class UpDataConsumerKafka extends UpDataConsumer {
                     String msg = rc.value() ;
                     System.out.println("msg=" + rc.value());
 
-                    UpDataConsumerImpl impl = new UpDataConsumerImpl(host, port, tp) ;
-                    impl.process(msg);
+                    doMessage(msg) ;
                 }
                 try {
                     Thread.sleep(500);

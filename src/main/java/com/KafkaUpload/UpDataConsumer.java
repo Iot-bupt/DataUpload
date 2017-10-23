@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Created by tangjialiang on 2017/10/18.
  *
- * 从Kafka中拉取数据。并分发数据处理
+ * 从消息队列中拉取数据。并分发数据处理
  */
 
 public abstract class UpDataConsumer implements Runnable {
@@ -21,7 +21,7 @@ public abstract class UpDataConsumer implements Runnable {
     // config
     protected String host ;
     protected int port ;
-    protected ThingBoardProxy tp = null ;
+    protected ThingBoardProxy tp  ;
     protected UpDataConsumerImpl impl ;
     protected final AtomicBoolean closed = new AtomicBoolean(false);
 
@@ -30,6 +30,14 @@ public abstract class UpDataConsumer implements Runnable {
         this.port = port ;
         this.tp = tp ;
         this.impl = new UpDataConsumerImpl(host, port, tp) ;
+    }
+
+    // init the consumer
+    public abstract void init() ;
+
+    // receive a message
+    public void doMessage(String msg) {
+        impl.process(msg);
     }
 
     // Shutdown hook which can be called from a separate thread
