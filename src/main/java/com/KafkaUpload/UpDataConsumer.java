@@ -7,6 +7,7 @@ import org.apache.kafka.common.errors.WakeupException;
 
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -40,9 +41,9 @@ public class UpDataConsumer implements Runnable {
 
     public void run() {
         try {
-            Properties props = new Properties();
-            props.put("bootstrap.servers", "10.108.218.64:9092");
-            props.put("group.id", "test");
+            Properties props = new Properties() ;
+            props.put("bootstrap.servers", "10.108.218.58:9092");
+            props.put("group.id", UUID.randomUUID().toString());
             props.put("enable.auto.commit", "true");
             props.put("auto.commit.interval.ms", "1000");
             props.put("session.timeout.ms", "30000");
@@ -50,6 +51,8 @@ public class UpDataConsumer implements Runnable {
                     "org.apache.kafka.common.serialization.StringDeserializer");
             props.put("value.deserializer",
                     "org.apache.kafka.common.serialization.StringDeserializer");
+
+
             consumer = new KafkaConsumer(props);
             consumer.subscribe(Arrays.asList("test"));
             while (!closed.get()) {

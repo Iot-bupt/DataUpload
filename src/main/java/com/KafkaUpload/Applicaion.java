@@ -13,11 +13,14 @@ public class Applicaion {
 
     public static void main(String[] args) {
         // load the configurations
-        String host = "10.108.219.194";
+        String host = "10.108.218.58";
         int port = 8080;
 
         try {
-            ThingBoardProxy tp = new ThingBoardProxy(host, port);
+            String username = "tenant@thingsboard.org" ;
+            String password = "tenant" ;
+
+            ThingBoardProxy tp = new ThingBoardProxy(host, port, username, password);
 
             UpDataConsumer cusmer = new UpDataConsumer(host, port, tp);
 

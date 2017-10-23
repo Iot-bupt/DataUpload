@@ -2,6 +2,7 @@ package com.KafkaUpload.upload.handler;
 
 import com.KafkaUpload.Device;
 import com.KafkaUpload.ThingBoardProxy;
+import com.alibaba.fastjson.JSONObject;
 
 import java.util.HashMap;
 

@@ -31,7 +31,7 @@ public class UpDataConsumerImpl {
         try {
             String uId = (String)pareseedMsg.get("uId") ;
             String dataType = (String)pareseedMsg.get("dataType") ;
-            String info = (String)pareseedMsg.get("info") ;
+            String info = pareseedMsg.get("info").toString() ;
             String deviceName = (String)pareseedMsg.get("deviceName") ;
 
             // 分发数据并处理
@@ -58,9 +58,10 @@ public class UpDataConsumerImpl {
     // --------------- test ---------------
 
     public static void main(String[] args) {
+        String mesg = "{\"uId\":\"uid1231231231\", \"dataType\":\"telemetry\", \"info\":{\"uId\":\"uid1231231231\"}, \"deviceName\":\"tjl's Demo VDevice\"}" ;//"temperature""16"
         String msg = "{\"deviceId\":\"qwe\", \"infoType\":\"attributions\", \"msg\":\"{}}\"}" ;
 
-        JSONObject parse = JSON.parseObject(msg);
+        JSONObject parse = JSON.parseObject(mesg);
         Object deviceId = parse.get("deviceId");
         Object infoType = parse.get("infoType");
         Object info = parse.get("msg");

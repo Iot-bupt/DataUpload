@@ -20,7 +20,7 @@ public class ConsumerDemo1 implements Runnable {
     public void run() {
         try {
             Properties props = new Properties();
-            props.put("bootstrap.servers", "10.108.218.64:9092");
+            props.put("bootstrap.servers", "10.108.218.58:9092");
             props.put("group.id", "test");
             props.put("enable.auto.commit", "true");
             props.put("auto.commit.interval.ms", "1000");
@@ -32,7 +32,7 @@ public class ConsumerDemo1 implements Runnable {
             consumer = new KafkaConsumer(props);
             consumer.subscribe(Arrays.asList("test"));
             while (!closed.get()) {
-                ConsumerRecords<String, String> records = consumer.poll(10000);
+                ConsumerRecords<String, String> records = consumer.poll(1000);
                 // Handle new records
                 for (final ConsumerRecord<String, String> rc : records) {
                     System.out.println("msg=" + rc.value());

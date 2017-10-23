@@ -1,6 +1,8 @@
 package com.Demo;
 
 import java.util.Properties;
+import java.util.Random;
+
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -16,8 +18,8 @@ public class ProducerDemo1 {
      */
     public static void main(String[] args) {
         Properties props = new Properties();
-        props.put("bootstrap.servers", "10.108.218.64:9092");
-        props.put("metadata.broker.list","10.108.218.64:9092");
+        props.put("bootstrap.servers", "10.108.218.58:9092");
+        props.put("metadata.broker.list","10.108.218.58:9092");
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         Producer<String, String> producer = new KafkaProducer(props);
@@ -30,8 +32,15 @@ public class ProducerDemo1 {
                 e.printStackTrace();
             }
 
+            // 温度随机数
+            int max=20;
+            int min=10;
+            Random random = new Random();
+            int temperature = random.nextInt(max)%(max-min+1) + min;
+
+            String info = "{\"uId\":\"uid1231231231\", \"dataType\":\"telemetry\", \"info\":{\"temperature\":\""+temperature+"\"}, \"deviceName\":\"tjl's Demo VDevice\"}" ; // "":""
             ProducerRecord<String, String> mesg = new ProducerRecord<String, String>("test",
-                    i+" said "+ i + " love you baby for " + i + " times,will you have a nice day with me tomorrow") ;
+                    info) ;
 
             System.out.format("topic: %s info: %s\n", "test", mesg.value()) ;
             producer.send(mesg);
@@ -47,7 +56,9 @@ public class ProducerDemo1 {
 // bin/zookeeper-server-start.sh config/zookeeper.properties &
 // bin/kafka-server-start.sh config/server.properties &
 
-// ./bin/kafka-topics  --delete --zookeeper 10.108.218.64:2181  --topic wordcount
-// bin/kafka-console-consumer.sh --zookeeper 10.108.218.64:2181 --topic test --from-beginning
-// bin/kafka-console-producer.sh --broker-list 10.108.218.64:9092 --topic test
-// bin/kafka-topics.sh --list --zookeeper 10.108.218.64:2181
+// bin/kafka-topics.sh --create --topic test --replication-factor 1 --partitions 1 --zookeeper localhost:2181
+// ./bin/kafka-topics  --delete --zookeeper localhost:2181  --topic wordcount
+// bin/kafka-topics.sh --list --zookeeper localhost:2181
+
+// bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic test --from-beginning
+// bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test

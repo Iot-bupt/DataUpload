@@ -20,17 +20,17 @@ public class RedisCache implements DeviceCacheMapper {
     public RedisCache(String host, int port) {
         this.host = host ;
         this.port = port ;
-    }
 
-    public void initial() {
         jedis = new Jedis(host);
-
-        System.out.println("连接成功");
-        //设置 redis 字符串数据
-        jedis.set("runoobkey", "www.runoob.com");
-        // 获取存储的数据并输出
-        System.out.println("redis 存储的字符串为: "+ jedis.get("runoobkey"));
     }
+
+//    public void initial() {
+//        System.out.println("连接成功");
+//        //设置 redis 字符串数据
+//        jedis.set("runoobkey", "www.runoob.com");
+//        // 获取存储的数据并输出
+//        System.out.println("redis 存储的字符串为: "+ jedis.get("runoobkey"));
+//    }
 
     public Device getDeviceByuId(String uid) {
         List<String> hmget = jedis.hmget(uid, "uId", "deviceAccess", "deviceId", "deviceName");
@@ -57,7 +57,6 @@ public class RedisCache implements DeviceCacheMapper {
 
     public static void main(String[] args) {
         RedisCache cache = new RedisCache("10.108.218.64", 6379) ;
-        cache.initial();
 
         Device device = new Device("uid131231", "deviceName231", "deviceId1234", "deviceName31242") ;
         Device uid131231 = cache.getDeviceByuId("uid131231");

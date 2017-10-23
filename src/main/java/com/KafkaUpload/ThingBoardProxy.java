@@ -1,8 +1,7 @@
 package com.KafkaUpload;
 
 import com.KafkaUpload.utils.DeviceCacheMapper;
-
-import java.util.HashMap;
+import com.KafkaUpload.utils.RedisCache;
 
 /**
  * Created by tangjialiang on 2017/10/18.
@@ -17,7 +16,7 @@ public class ThingBoardProxy {
     private String password  ;
 
     private ThingsBoardApi api ;
-    private DeviceCacheMapper cacheMapper ;
+    private DeviceCacheMapper cacheMapper = new RedisCache("10.108.218.64", 6379);
 
 
     /**
@@ -32,7 +31,6 @@ public class ThingBoardProxy {
         this.host = host ;
         this.port = port ;
         this.api = new ThingsBoardApi(this.host, this.port) ;
-        // todo new DeviceCacheMapper
     }
 
     public ThingBoardProxy(String host, int port, String username, String password) throws Exception {
@@ -42,7 +40,6 @@ public class ThingBoardProxy {
         this.username = username ;
         this.password = password ;
         getToken(username, password);
-        // todo new DeviceCacheMapper
     }
 
     // ----------------------- 相关业务 -----------------------
@@ -100,7 +97,7 @@ public class ThingBoardProxy {
         // 2、有   得到accessToken,并发送attribute
         // 2、否   (1)依据设备名创建一个设备（返回deviceId）(2)查找设备的accessToken(在缓存中记录) （3）发送attributes
 
-        String uid = device.getDeviceId() ;
+        String uid = device.getuId() ;
         String deviceName = device.getDeviceName() ;
 
         Device cacheDevice = cacheMapper.getDeviceByuId(uid);
@@ -148,7 +145,7 @@ public class ThingBoardProxy {
             String deviecToken = "3HLZRun4LjT8PLSOGhvf" ;
             Device device = new Device("uid123123", "myDevice") ;
 
-            tp.sendTelelmetry(device, msg);
+//            tp.sendTelelmetry(device, msg);
 
         } catch (Exception e) {
             System.out.println(e) ;
