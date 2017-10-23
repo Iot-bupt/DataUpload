@@ -22,7 +22,7 @@ public class Applicaion {
 
             ThingBoardProxy tp = new ThingBoardProxy(host, port, username, password);
 
-            UpDataConsumer cusmer = new UpDataConsumer(host, port, tp);
+            UpDataConsumer cusmer = new UpDataConsumerKafka(host, port, tp);
 
             Thread thread = new Thread(cusmer);
             thread.start();
