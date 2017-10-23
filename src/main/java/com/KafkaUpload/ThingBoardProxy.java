@@ -68,7 +68,7 @@ public class ThingBoardProxy {
         // 2、有   得到accessToken,并发送attribute
         // 2、否   (1)依据设备名创建一个设备（返回deviceId）(2)查找设备的accessToken(在缓存中记录) （3）发送attributes
 
-        String uid = device.getDeviceId() ;
+        String uid = device.getuId() ;
         String deviceName = device.getDeviceName() ;
 
         Device cacheDevice = cacheMapper.getDeviceByuId(uid);
@@ -83,7 +83,7 @@ public class ThingBoardProxy {
         }
 
         // 发送attributes数据
-        this.api.api_attributes(token, device.getDeviceAccess(), msg);
+        this.api.api_attributes(token, cacheDevice.getDeviceAccess(), msg);
 
     }
 
@@ -112,7 +112,7 @@ public class ThingBoardProxy {
         }
 
         // 发送attributes数据
-        this.api.api_telemetry(token, device.getDeviceAccess(), msg);
+        this.api.api_telemetry(token, cacheDevice.getDeviceAccess(), msg);
     }
 
     public String get_accessToken(String deviceId) {
