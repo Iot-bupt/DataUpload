@@ -46,6 +46,7 @@ public class UpDataConsumerRocketMQ extends UpDataConsumer {
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs,
                                                             ConsumeConcurrentlyContext context) {
                 System.out.println(Thread.currentThread().getName() + " Receive New Messages: " + msgs);
+
                 for (Message msg :msgs){
                     String content = new String(msg.getBody()) ;
                     System.out.println(content) ;

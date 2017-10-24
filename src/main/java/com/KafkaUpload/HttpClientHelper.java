@@ -11,11 +11,9 @@ import java.util.Map;
 
 /**
  * Created by tangjialiang on 2017/10/19.
+ *
  */
 public class HttpClientHelper {
-
-    // todo 保持一个链接
-
 
     public static String sendGet(String address, Map<String, String> request_headers) {
         String result = "";

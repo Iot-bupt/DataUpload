@@ -36,7 +36,7 @@ public abstract class UpDataConsumer implements Runnable {
     public abstract void init() ;
 
     // receive a message
-    public void doMessage(String msg) {
+    public synchronized void doMessage(String msg) {
         impl.process(msg);
     }
 
