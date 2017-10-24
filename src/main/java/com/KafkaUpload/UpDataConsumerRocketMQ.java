@@ -26,15 +26,16 @@ public class UpDataConsumerRocketMQ extends UpDataConsumer {
     }
 
     public void init() {
-        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("unique_group_name_quickstart");
+        consumer = new DefaultMQPushConsumer("unique_group_name_quickstart");
 
         //consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET); // not need
 
-        consumer.setNamesrvAddr("172.30.248.219:9876");
+        consumer.setNamesrvAddr("10.108.219.158:9876");
         consumer.setInstanceName("QuickStartConsumer");
+        consumer.setConsumeConcurrentlyMaxSpan(3);
 
         try {
-            consumer.subscribe("test", "TagA3");
+            consumer.subscribe("TopicTest", "*");
         } catch (MQClientException e) {
             System.out.println(e) ;
             e.printStackTrace();
@@ -49,11 +50,19 @@ public class UpDataConsumerRocketMQ extends UpDataConsumer {
                                                             ConsumeConcurrentlyContext context) {
                 System.out.println(Thread.currentThread().getName() + " Receive New Messages: " + msgs);
                 for (Message msg :msgs){
-                    System.out.println(new String(msg.getBody())) ;
+                    String content = new String(msg.getBody()) ;
+                    System.out.println(content) ;
+                    doMessage(content);
                 }
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
         });
+
+        try {
+            consumer.start();
+        } catch (MQClientException e) {
+            e.printStackTrace();
+        }
     }
 
 

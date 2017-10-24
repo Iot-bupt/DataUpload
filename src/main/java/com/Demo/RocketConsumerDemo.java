@@ -20,10 +20,10 @@ public class RocketConsumerDemo {
 
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
 
-        consumer.setNamesrvAddr("172.30.248.219:9876");
+        consumer.setNamesrvAddr("10.108.219.158:9876");
         consumer.setInstanceName("QuickStartConsumer");
 
-        consumer.subscribe("TopicTest", "TagA3");
+        consumer.subscribe("TopicTest", "*");
 
 
         consumer.registerMessageListener(new MessageListenerConcurrently() {
@@ -32,7 +32,8 @@ public class RocketConsumerDemo {
                                                             ConsumeConcurrentlyContext context) {
                 System.out.println(Thread.currentThread().getName() + " Receive New Messages: " + msgs);
                 for (Message msg :msgs){
-                    System.out.println(new String(msg.getBody()));
+                    String content = new String(msg.getBody()) ;
+                    System.out.println(content);
                 }
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }

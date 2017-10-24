@@ -22,9 +22,9 @@ public class Applicaion {
 
             ThingBoardProxy tp = new ThingBoardProxy(host, port, username, password);
 
-            UpDataConsumer cusmer = new UpDataConsumerKafka(host, port, tp);
+            UpDataConsumer consumer = new UpDataConsumerRocketMQ(host, port, tp);
 
-            Thread thread = new Thread(cusmer);
+            Thread thread = new Thread(consumer);
             thread.start();
         } catch (Exception e) {
             // todo

@@ -16,7 +16,7 @@ public class ThingBoardProxy {
     private String password  ;
 
     private ThingsBoardApi api ;
-    private DeviceCacheMapper cacheMapper = new RedisCache("10.108.218.64", 6379);
+    private DeviceCacheMapper cacheMapper = new RedisCache("10.108.218.64", 6379); // redis 地址
 
 
     /**

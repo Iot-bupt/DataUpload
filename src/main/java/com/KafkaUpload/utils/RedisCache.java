@@ -22,15 +22,16 @@ public class RedisCache implements DeviceCacheMapper {
         this.port = port ;
 
         jedis = new Jedis(host);
-    }
 
-//    public void initial() {
-//        System.out.println("连接成功");
-//        //设置 redis 字符串数据
-//        jedis.set("runoobkey", "www.runoob.com");
-//        // 获取存储的数据并输出
-//        System.out.println("redis 存储的字符串为: "+ jedis.get("runoobkey"));
-//    }
+        while(jedis.isConnected()) {
+            System.out.println("try connect to redis") ;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public Device getDeviceByuId(String uid) {
         List<String> hmget = jedis.hmget(uid, "uId", "deviceAccess", "deviceId", "deviceName");
