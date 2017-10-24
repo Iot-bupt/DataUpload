@@ -59,7 +59,6 @@ public class UpDataConsumerImpl {
 
     public static void main(String[] args) {
         String mesg = "{\"uId\":\"uid1231231231\", \"dataType\":\"telemetry\", \"info\":{\"uId\":\"uid1231231231\"}, \"deviceName\":\"tjl's Demo VDevice\"}" ;//"temperature""16"
-        String msg = "{\"deviceId\":\"qwe\", \"infoType\":\"attributions\", \"msg\":\"{}}\"}" ;
 
         JSONObject parse = JSON.parseObject(mesg);
         Object deviceId = parse.get("deviceId");

@@ -40,10 +40,7 @@ public class UpDataConsumerRocketMQ extends UpDataConsumer {
             System.out.println(e) ;
             e.printStackTrace();
         }
-    }
 
-
-    public void run() {
         // 在该线程中转载监听器（之后退出该线程），也可以写在其他位置（只要执行一遍即可）。
         consumer.registerMessageListener(new MessageListenerConcurrently() {
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs,
@@ -63,6 +60,11 @@ public class UpDataConsumerRocketMQ extends UpDataConsumer {
         } catch (MQClientException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public void run() {
+
     }
 
 

@@ -13,28 +13,28 @@ import java.util.Map;
  * Redis Cache
  */
 public class RedisCache implements DeviceCacheMapper {
-    String host ;
-    int port ;
-    Jedis jedis;
+//    String host ;
+//    int port ;
+//    Jedis jedis;
 
     public RedisCache(String host, int port) {
-        this.host = host ;
-        this.port = port ;
+//        this.host = host ;
+//        this.port = port ;
 
-        jedis = new Jedis(host);
-
-        while(jedis.isConnected()) {
-            System.out.println("try connect to redis") ;
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        jedis = new Jedis(host);
+//
+//        while(jedis.isConnected()) {
+//            System.out.println("try connect to redis") ;
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     public Device getDeviceByuId(String uid) {
-        List<String> hmget = jedis.hmget(uid, "uId", "deviceAccess", "deviceId", "deviceName");
+        List<String> hmget = RedisUtil.hmget(uid, "uId", "deviceAccess", "deviceId", "deviceName");
         if (hmget==null || hmget.size()==0 || hmget.get(0)==null || hmget.get(1)==null || hmget.get(2)==null || hmget.get(3)==null) return null ;
 
         Device device = new Device(hmget.get(0), hmget.get(1), hmget.get(2), hmget.get(3)) ;
@@ -48,7 +48,7 @@ public class RedisCache implements DeviceCacheMapper {
             deviceMap.put("deviceAccess", device.getDeviceAccess()) ;
             deviceMap.put("deviceId", device.getDeviceId()) ;
             deviceMap.put("deviceName", device.getDeviceName()) ;
-            jedis.hmset(uid, deviceMap) ;
+            RedisUtil.hmset(uid, deviceMap) ;
         } catch (Exception e) {
             System.out.println("can't add device to cache") ;
             return false ;
