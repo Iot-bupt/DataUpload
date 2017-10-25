@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.typesafe.akka:akka-actor_2.11:2.4.9-RC1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/apache-maven/repository/com/typesafe/akka/akka-actor_2.11/2.4.9-RC1/akka-actor_2.11-2.4.9-RC1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/apache-maven/repository/com/typesafe/akka/akka-actor_2.11/2.4.9-RC1/akka-actor_2.11-2.4.9-RC1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/apache-maven/repository/com/typesafe/akka/akka-actor_2.11/2.4.9-RC1/akka-actor_2.11-2.4.9-RC1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

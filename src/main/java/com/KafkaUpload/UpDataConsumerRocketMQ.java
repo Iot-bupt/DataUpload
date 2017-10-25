@@ -25,6 +25,7 @@ public class UpDataConsumerRocketMQ extends UpDataConsumer {
         init() ;
     }
 
+    @Override
     public void init() {
         consumer = new DefaultMQPushConsumer("unique_group_name_quickstart");
 
