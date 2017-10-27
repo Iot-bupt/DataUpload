@@ -8,6 +8,7 @@ import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.common.message.MessageExt;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
@@ -17,6 +18,8 @@ import java.util.List;
  */
 
 public class UpDataConsumerRocketMQ extends UpDataConsumer {
+
+    private static Logger logger = Logger.getLogger(UpDataConsumerRocketMQ.class) ;
 
     DefaultMQPushConsumer consumer ;
 
@@ -38,19 +41,18 @@ public class UpDataConsumerRocketMQ extends UpDataConsumer {
         try {
             consumer.subscribe("hello", "*");
         } catch (MQClientException e) {
-            System.out.println(e) ;
-            e.printStackTrace();
+            logger.error("cant't subscrible the topic") ;
         }
 
         // 在该线程中转载监听器（之后退出该线程），也可以写在其他位置（只要执行一遍即可）。
         consumer.registerMessageListener(new MessageListenerConcurrently() {
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs,
                                                             ConsumeConcurrentlyContext context) {
-                System.out.println(Thread.currentThread().getName() + " Receive New Messages: " + msgs);
+                logger.info(Thread.currentThread().getName() + " Receive New Messages: " + msgs);
 
                 for (Message msg :msgs){
                     String content = new String(msg.getBody()) ;
-                    System.out.println(content) ;
+
                     doMessage(content);
                 }
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
@@ -60,7 +62,7 @@ public class UpDataConsumerRocketMQ extends UpDataConsumer {
         try {
             consumer.start();
         } catch (MQClientException e) {
-            e.printStackTrace();
+            logger.error("cant't start the consumer");
         }
     }
 

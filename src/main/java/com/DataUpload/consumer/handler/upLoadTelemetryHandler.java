@@ -3,6 +3,8 @@ package com.DataUpload.consumer.handler;
 
 import com.DataUpload.platform.ThingBoardProxy;
 import com.DataUpload.utils.Device;
+import org.apache.log4j.Logger;
+
 
 /**
  * Created by tangjialiang on 2017/10/19.
@@ -10,6 +12,8 @@ import com.DataUpload.utils.Device;
  * 对从Kafka拉取到的数据处理 -- type : telemetry
  */
 public class upLoadTelemetryHandler extends upLoadDataHandler {
+
+    private static Logger logger = Logger.getLogger(upLoadTelemetryHandler.class) ;
 
     private String uId ;
     private String dataType ;
@@ -34,8 +38,7 @@ public class upLoadTelemetryHandler extends upLoadDataHandler {
         try {
             tp.sendTelelmetry(device, info);
         } catch (Exception e) {
-            System.out.println(e) ;
-            e.printStackTrace() ;
+            logger.error("can't send info: " + info);
         }
     }
 }

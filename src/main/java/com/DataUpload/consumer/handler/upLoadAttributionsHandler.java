@@ -3,6 +3,7 @@ package com.DataUpload.consumer.handler;
 
 import com.DataUpload.platform.ThingBoardProxy;
 import com.DataUpload.utils.Device;
+import org.apache.log4j.Logger;
 
 /**
  * Created by tangjialiang on 2017/10/19.
@@ -10,6 +11,8 @@ import com.DataUpload.utils.Device;
  * 对从Kafka拉取到的数据处理  -- type : attributions
  */
 public class upLoadAttributionsHandler extends upLoadDataHandler {
+
+    private static Logger logger = Logger.getLogger(upLoadAttributionsHandler.class) ;
 
     private ThingBoardProxy tp ;
     // 以下是由Kafka消费者解析到的字段
@@ -35,8 +38,7 @@ public class upLoadAttributionsHandler extends upLoadDataHandler {
         try {
             tp.sendAttributions(device, info);
         } catch (Exception e) {
-            System.out.println(e) ;
-            e.printStackTrace() ;
+            logger.error("can't send info: " + info) ;
         }
     }
 }

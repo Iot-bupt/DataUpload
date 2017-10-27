@@ -6,6 +6,8 @@ import com.DataUpload.consumer.handler.upLoadTelemetryHandler;
 import com.DataUpload.platform.ThingBoardProxy;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.log4j.Logger;
+
 
 /**
  * Created by tangjialiang on 2017/10/19.
@@ -14,6 +16,8 @@ import com.alibaba.fastjson.JSONObject;
  *
  */
 public class UpDataConsumerImpl {
+
+    protected static Logger logger = Logger.getLogger(UpDataConsumerImpl.class) ;
 
     private String host ;
     private int port ;
@@ -43,8 +47,7 @@ public class UpDataConsumerImpl {
             }
 
         } catch (Exception e) {
-            // todo
-            System.out.println("Error in parse JSON string") ;
+            logger.info("can't analysis the msg received.") ;
         }
     }
 

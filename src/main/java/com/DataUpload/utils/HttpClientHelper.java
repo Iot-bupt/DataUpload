@@ -1,6 +1,7 @@
 package com.DataUpload.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -14,6 +15,8 @@ import java.util.Map;
  *
  */
 public class HttpClientHelper {
+
+    private static Logger logger = Logger.getLogger(HttpClientHelper.class) ;
 
     public static String sendGet(String address, Map<String, String> request_headers) {
         String result = "";
@@ -40,7 +43,7 @@ public class HttpClientHelper {
                 result += line;
             }
         } catch (Exception e) {
-            System.out.println("发送GET请求出现异常！" + e);
+            logger.error("发送GET请求出现异常！" + e);
             e.printStackTrace();
         }
         // 使用finally块来关闭输入流
@@ -107,14 +110,11 @@ public class HttpClientHelper {
             // 断开连接
             connection.disconnect();
         } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error(e) ;
         } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error(e) ;
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error(e) ;
         }
         return response;
     }

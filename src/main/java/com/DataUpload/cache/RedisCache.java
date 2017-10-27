@@ -3,6 +3,7 @@ package com.DataUpload.cache;
 
 
 import com.DataUpload.utils.Device;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,8 @@ public class RedisCache implements DeviceCacheMapper {
 //    String host ;
 //    int port ;
 //    Jedis jedis;
+
+    private static Logger logger = Logger.getLogger(RedisCache.class) ;
 
     public RedisCache(String host, int port) {
 //        this.host = host ;
@@ -51,7 +54,7 @@ public class RedisCache implements DeviceCacheMapper {
             deviceMap.put("deviceName", device.getDeviceName()) ;
             RedisUtil.hmset(uid, deviceMap) ;
         } catch (Exception e) {
-            System.out.println("can't add device to cache") ;
+            logger.error("can't add device to cache") ;
             return false ;
         }
         return true ;
