@@ -26,6 +26,8 @@ public class Applicaion {
 
             Thread thread = new Thread(consumer);
             thread.start();
+
+            System.out.println("hello world") ;
         } catch (Exception e) {
             // todo
             System.out.println(e) ;
