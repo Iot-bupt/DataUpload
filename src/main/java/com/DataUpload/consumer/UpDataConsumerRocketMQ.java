@@ -36,7 +36,7 @@ public class UpDataConsumerRocketMQ extends UpDataConsumer {
         consumer.setConsumeConcurrentlyMaxSpan(3);
 
         try {
-            consumer.subscribe("TopicTest", "*");
+            consumer.subscribe("hello", "*");
         } catch (MQClientException e) {
             System.out.println(e) ;
             e.printStackTrace();

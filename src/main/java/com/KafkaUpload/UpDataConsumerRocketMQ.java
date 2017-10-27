@@ -27,7 +27,7 @@ public class UpDataConsumerRocketMQ extends UpDataConsumer {
 
     @Override
     public void init() {
-        consumer = new DefaultMQPushConsumer("unique_group_name_quickstart");
+        consumer = new DefaultMQPushConsumer("hello");
 
         //consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET); // not need
 
@@ -36,7 +36,7 @@ public class UpDataConsumerRocketMQ extends UpDataConsumer {
         consumer.setConsumeConcurrentlyMaxSpan(3);
 
         try {
-            consumer.subscribe("TopicTest", "*");
+            consumer.subscribe("hello", "device");
         } catch (MQClientException e) {
             System.out.println(e) ;
             e.printStackTrace();

@@ -68,23 +68,24 @@ public class ThingBoardProxy {
         // 2、有   得到accessToken,并发送attribute
         // 2、否   (1)依据设备名创建一个设备（返回deviceId）(2)查找设备的accessToken(在缓存中记录) （3）发送attributes
 
-        String uid = device.getuId() ;
-        String deviceName = device.getDeviceName() ;
+        synchronized (ThingBoardProxy.class) {
+            String uid = device.getuId();
+            String deviceName = device.getDeviceName();
 
-        Device cacheDevice = cacheMapper.getDeviceByuId(uid);
-        if (cacheDevice == null) { // 没有命中
-            // 创建设备
-            String deviceId = this.api.api_device(token, deviceName, "default");
-            String accessToken = this.api.api_accessToken(token, deviceId);
+            Device cacheDevice = cacheMapper.getDeviceByuId(uid);
+            if (cacheDevice == null) { // 没有命中
+                // 创建设备
+                String deviceId = this.api.api_device(token, deviceName, "default");
+                String accessToken = this.api.api_accessToken(token, deviceId);
 
-            // 更新缓存
-            device = new Device(uid, accessToken, deviceId, deviceName) ;
-            cacheMapper.addDevice(uid, device) ;
+                // 更新缓存
+                device = new Device(uid, accessToken, deviceId, deviceName);
+                cacheMapper.addDevice(uid, device);
+            }
+
+            // 发送attributes数据
+            this.api.api_attributes(token, cacheDevice.getDeviceAccess(), msg);
         }
-
-        // 发送attributes数据
-        this.api.api_attributes(token, cacheDevice.getDeviceAccess(), msg);
-
     }
 
     // --> 发送设备的telemetry
@@ -96,23 +97,24 @@ public class ThingBoardProxy {
         // 1、传入的是kafka中的uId，在缓存中查找是否有这个uId对应的设备
         // 2、有   得到accessToken,并发送attribute
         // 2、否   (1)依据设备名创建一个设备（返回deviceId）(2)查找设备的accessToken(在缓存中记录) （3）发送attributes
+        synchronized (ThingBoardProxy.class) {
+            String uid = device.getuId();
+            String deviceName = device.getDeviceName();
 
-        String uid = device.getuId() ;
-        String deviceName = device.getDeviceName() ;
+            Device cacheDevice = cacheMapper.getDeviceByuId(uid);
+            if (cacheDevice == null) { // 没有命中
+                // 创建设备
+                String deviceId = this.api.api_device(token, deviceName, "default");
+                String accessToken = this.api.api_accessToken(token, deviceId);
 
-        Device cacheDevice = cacheMapper.getDeviceByuId(uid);
-        if (cacheDevice == null) { // 没有命中
-            // 创建设备
-            String deviceId = this.api.api_device(token, deviceName, "default");
-            String accessToken = this.api.api_accessToken(token, deviceId);
+                // 更新缓存
+                device = new Device(uid, accessToken, deviceId, deviceName);
+                cacheMapper.addDevice(uid, device);
+            }
 
-            // 更新缓存
-            device = new Device(uid, accessToken, deviceId, deviceName) ;
-            cacheMapper.addDevice(uid, device) ;
+            // 发送attributes数据
+            this.api.api_telemetry(token, cacheDevice.getDeviceAccess(), msg);
         }
-
-        // 发送attributes数据
-        this.api.api_telemetry(token, cacheDevice.getDeviceAccess(), msg);
     }
 
     public String get_accessToken(String deviceId) {

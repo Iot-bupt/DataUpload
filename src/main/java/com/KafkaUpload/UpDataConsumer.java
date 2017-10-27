@@ -36,8 +36,10 @@ public abstract class UpDataConsumer implements Runnable {
     public abstract void init() ;
 
     // receive a message
-    public synchronized void doMessage(String msg) {
-        impl.process(msg);
+    public void doMessage(String msg) {
+        synchronized(UpDataConsumer.class) {
+            impl.process(msg);
+        }
     }
 
     // Shutdown hook which can be called from a separate thread

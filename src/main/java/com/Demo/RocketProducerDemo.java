@@ -19,7 +19,7 @@ public class RocketProducerDemo {
         producer.setInstanceName("QuickStartProducer");
         producer.start();
 
-        for (int i = 0; true; i++) {
+        for (int i = 0; i < 100; i++) {
             try {
 
                 try {
@@ -37,7 +37,8 @@ public class RocketProducerDemo {
                 String dataType = (type==0) ? ("telemetry") : ("attributions") ;
                 String info = "{\"uId\":\"uid1231231231\", \"dataType\":\""+dataType+"\", \"info\":{\"temperature\":\""+temperature+"\"}, \"deviceName\":\"tjl's Demo VDevice\"}" ; // "":""
 
-                Message msg = new Message("TopicTest",// topic
+                Message msg = new Message("hello",// topic
+                        "device",
                         info.getBytes()// body
                 );
                 SendResult sendResult = producer.send(msg);
