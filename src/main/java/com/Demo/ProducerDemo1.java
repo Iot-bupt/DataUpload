@@ -65,4 +65,6 @@ public class ProducerDemo1 {
 // bin/kafka-topics.sh --list --zookeeper localhost:2181
 
 // bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic test --from-beginning
+// bin/kafka-console-consumer.sh --zookeeper 10.108.218.58:2181 --topic data --from-beginning
 // bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test
+// bin/kafka-console-producer.sh --broker-list 10.108.218.58:9092 --topic test
